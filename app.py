@@ -1,14 +1,39 @@
-from flask import Flask, send_from_directory
+from flask import Flask, send_from_directory, g, request
+from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
 
 import sys
+import os
+import json
+
+import config
+from stats import compare
+import variables
+import queries
+
+db = SQLAlchemy()
 
 app = Flask(__name__,
             static_url_path='',
             static_folder='static')
+CORS(app)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = config.url
+db.init_app(app)
+
+print("Launching...")
+
+with app.app_context():
+    cachedVars, gSplits = variables.fetchVarsFromDB(app, db)
 
 @app.route("/hellow")
 def hello_world():
-    return "<h1>Hello, Web!!!</h1>"
+    sample_query = "select count(*) boo from DeidentResults"
+    r = db.session.execute(text(sample_query))
+    data = [row.boo for row in r]
+    d = json.dumps(data)
+    return """<h1>Hello, Web!!! </h1>
+         %s""" % d
 
 @app.route("/")
 def main():
@@ -18,15 +43,35 @@ def main():
 def hello_content():
     return "<h1>HERE</h1>is my page."
 
-@app.route("/assays")
+@app.route("/api/assays")
 def assays():
     data = {
         "items":[
-            {"id":"binax","displayName":"BinaxNOW&trade; COVID-19 Ag Card","coef":1.1843183,"intercept":-5.37500995},
-            {"id":"ginko","displayName":"CareStart COVID-19 Antigen Home Test","coef":1.14230231,"intercept":-5.70535991}
+            {"id":"binax",
+             "displayName":"BinaxNOW&trade; COVID-19 Ag Card",
+             "coef":1.1843183,
+             "intercept":-5.37500995},
+            {"id":"ginko",
+             "displayName":"CareStart COVID-19 Antigen Home Test",
+             "coef":1.14230231,
+             "intercept":-5.70535991}
         ]
     }
+    for item in data["items"]:
+        item['ld50'] = -(item['intercept']/item['coef'])
     return data
+
+@app.route("/api/variables")
+def variables():
+    data = {
+        "items" : cachedVars,
+        "version" : 0,
+        }
+    return data
+
+@app.route("/api/data/viralloads")
+def datafetch():
+    return queries.datafetch(db, gSplits, request.args)
 
 @app.route("/kill")
 def killer():

@@ -47,11 +47,11 @@ colorPairs = [convertColors(p) for p in colorPairs[::-1]]
 def getColorSchema(index):
     return colorPairs[index % len(colorPairs)]
 
-black = "rgb(0,0,0)"
+black = "#000000"
 
 def getPlainColors():
-    return {"positives" : [black, black],
-            "negatives" : [black, black],
+    return {"positives" : black,
+            "negatives" : black,
             }
 
 
