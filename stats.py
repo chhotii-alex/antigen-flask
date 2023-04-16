@@ -1,4 +1,6 @@
+from scipy.stats import kstest
 
-# Currently a stub
+# Kolmogorov-Smirnov test comparing distributions
 def compare(list_a, list_b):
-    return 0.05
+    res = kstest(list_a, list_b)
+    return res.pvalue
