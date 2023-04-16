@@ -135,6 +135,6 @@ def fetchVarsFromDB(app, db):
             items.append(
                 {"id": split.variable,
                  "displayName" : split.variableDisplayName,
-                 "slits":divisions
+                 "splits":divisions
                    })
         return (items, splits)
