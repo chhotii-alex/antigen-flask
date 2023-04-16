@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory, g, request
+from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
@@ -26,22 +26,9 @@ print("Launching...")
 with app.app_context():
     cachedVars, gSplits = variables.fetchVarsFromDB(app, db)
 
-@app.route("/hellow")
+@app.route("/hello")
 def hello_world():
-    sample_query = "select count(*) boo from DeidentResults"
-    r = db.session.execute(text(sample_query))
-    data = [row.boo for row in r]
-    d = json.dumps(data)
-    return """<h1>Hello, Web!!! </h1>
-         %s""" % d
-
-@app.route("/")
-def main():
-    return send_from_directory('static', 'index.html')
-
-@app.route("/sample")
-def hello_content():
-    return "<h1>HERE</h1>is my page."
+    return """<h1>Hello, Web!!! </h1>this is the new implementation"""
 
 @app.route("/api/assays")
 def assays():
