@@ -52,7 +52,7 @@ def assays():
 def variables():
     data = {
         "items" : cachedVars,
-        "version" : 0,
+        "version" : 1,
         }
     return data
 
