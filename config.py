@@ -17,7 +17,7 @@ def make_url():
                                             creds['port'],
                                             creds['database']) 
 
-if 'DATABASE_URL' in os.environ:
+if 'DATABASE_URL' in os.environ and os.environ['DATABASE_URL']:
     url = os.environ['DATABASE_URL']
 else:
     print("DATABASE_URL unknown, connecting to local database")
