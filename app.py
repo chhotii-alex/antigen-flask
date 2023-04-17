@@ -59,8 +59,3 @@ def variables():
 @app.route("/api/data/viralloads")
 def datafetch():
     return queries.datafetch(db, gSplits, request.args)
-
-@app.route("/kill")
-def killer():
-    print("Site going down")
-    sys.exit(1)
