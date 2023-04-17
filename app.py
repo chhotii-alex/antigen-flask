@@ -6,11 +6,13 @@ import sys
 import os
 import json
 
-import logging
+import mylogs
 import config
 from stats import compare
 import variables
 import queries
+
+mylogs.set_up_logging()
 
 db = SQLAlchemy()
 
