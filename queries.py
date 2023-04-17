@@ -23,8 +23,7 @@ def kernel_density(data, start=0.0, stop=11.0):
     data = np.asarray(data)[:, np.newaxis]
     numpoints = round((stop-start)/0.02)+1
     X = np.linspace(start, stop, numpoints)[:, np.newaxis]
-    kde = KernelDensity(kernel="epanechnikov", bandwidth=0.5).fit(data)
-    #kde = KernelDensity(kernel="gaussian", bandwidth=0.25).fit(data)
+    kde = KernelDensity(kernel="gaussian", bandwidth=0.25).fit(data)
     log_dens = kde.score_samples(X)
     density = np.exp(log_dens)
     density[0] = 0
