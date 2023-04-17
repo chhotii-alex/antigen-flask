@@ -6,6 +6,7 @@ import sys
 import os
 import json
 
+import logging
 import config
 from stats import compare
 import variables
