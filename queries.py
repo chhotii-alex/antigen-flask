@@ -19,9 +19,10 @@ def getJitter(query):
     jitter = round(g.random.uniform(-3.5, 3.5))
     return jitter
 
-def kernel_density(data):
+def kernel_density(data, start=0.0, stop=11.0):
     data = np.asarray(data)[:, np.newaxis]
-    X = np.linspace(0, 11, 500)[:, np.newaxis]
+    numpoints = round((stop-start)/0.02)+1
+    X = np.linspace(start, stop, numpoints)[:, np.newaxis]
     kde = KernelDensity(kernel="epanechnikov", bandwidth=0.5).fit(data)
     #kde = KernelDensity(kernel="gaussian", bandwidth=0.25).fit(data)
     log_dens = kde.score_samples(X)
@@ -193,7 +194,7 @@ def runQuery(db, label, queryParts):
             {"viralLoadLog": density[i][0],
             "viralLoadLogMin": density[i][0] - halfBin,
             "viralLoadLogMax": density[i][0] + halfBin,
-            "count": density[i][1]*total}
+             "count": density[i][1]*total*2}
             for i
             in range(density.shape[0]) ]
     
