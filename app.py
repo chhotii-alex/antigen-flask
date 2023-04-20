@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from werkzeug.middleware.profiler import ProfilerMiddleware
 
 import sys
 import os
@@ -16,6 +17,8 @@ db = SQLAlchemy()
 app = Flask(__name__,
             static_url_path='',
             static_folder='static')
+if 'FLASK_PROFILING' in os.environ:
+    app.wsgi_app = ProfilerMiddleware(app.wsgi_app, profile_dir="/Users/work/antigen-flask/profile_dir")
 CORS(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = config.url
