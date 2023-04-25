@@ -4,7 +4,7 @@ from sqlalchemy import text
 from flask import g
 
 import numpy as np
-from sklearn.neighbors import KernelDensity
+import statsmodels.api as sm
 
 import colors
 import stats
@@ -22,13 +22,13 @@ def getJitter(query):
 def kernel_density(data, start=0.0, stop=11.0):
     data = np.asarray(data)[:, np.newaxis]
     numpoints = round((stop-start)/0.02)+1
-    X = np.linspace(start, stop, numpoints)[:, np.newaxis]
-    kde = KernelDensity(kernel="gaussian", bandwidth=0.25).fit(data)
-    log_dens = kde.score_samples(X)
-    density = np.exp(log_dens)
+    X = np.linspace(start, stop, numpoints)
+    kde = sm.nonparametric.KDEUnivariate(data)
+    kde.fit(kernel="gau", bw=0.25)
+    density = kde.evaluate(X)
     density[0] = 0
     density[-1] = 0
-    r = np.asarray([X[:,0], density]).transpose()
+    r = np.asarray([X, density]).transpose()
     return r
 
 def andWhere(queryParts, cond):
